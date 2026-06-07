@@ -269,10 +269,10 @@ def _render_table(records: list, descriptions: dict) -> str:
     lines = []
 
     header = (
-        "| Date | Category | Test Name | Description "
+        "| Sim Date | PLDM Date | Category | Test Name | Description "
         "| Sim Cycles | PLDM Cycles | Delta | Diff% |"
     )
-    separator = "|---|---|---|---|---:|---:|---:|---:|"
+    separator = "|---|---|---|---|---|---:|---:|---:|---:|"
     lines.append(header)
     lines.append(separator)
 
@@ -305,7 +305,8 @@ def _render_table(records: list, descriptions: dict) -> str:
         sim_c = primary["sim_cycles"]
         pldm_c = primary["pldm_cycles"]
         vc = primary.get("num_vcores", "")
-        date_str = _date_cell(primary.get("sim_date", ""), primary.get("pldm_date", ""))
+        sim_date = _iso_to_display(primary.get("sim_date", "")) or "-"
+        pldm_date = _iso_to_display(primary.get("pldm_date", "")) or "-"
 
         # Annotate primary cycles with vcore count when sub-rows exist
         if has_sub and vc:
@@ -318,7 +319,7 @@ def _render_table(records: list, descriptions: dict) -> str:
         delta_str, diff_str = _delta_and_pct(sim_c, pldm_c)
 
         lines.append(
-            f"| {date_str} | {cat_str} | {test_name} | {desc} "
+            f"| {sim_date} | {pldm_date} | {cat_str} | {test_name} | {desc} "
             f"| {sim_str} | {pldm_str} | {delta_str} | {diff_str} |"
         )
 
@@ -329,14 +330,15 @@ def _render_table(records: list, descriptions: dict) -> str:
                 f"Running on {sub_vc} vcores" if sub_vc
                 else "Running on all vcores"
             )
-            sub_date = _date_cell(sub.get("sim_date", ""), sub.get("pldm_date", ""))
+            sub_sim_date = _iso_to_display(sub.get("sim_date", "")) or "-"
+            sub_pldm_date = _iso_to_display(sub.get("pldm_date", "")) or "-"
             sub_sim = _fmt(sub["sim_cycles"])
             sub_pldm = _fmt(sub["pldm_cycles"])
             sub_delta, sub_diff = _delta_and_pct(
                 sub["sim_cycles"], sub["pldm_cycles"]
             )
             lines.append(
-                f"| {sub_date} | | | {label} "
+                f"| {sub_sim_date} | {sub_pldm_date} | | | {label} "
                 f"| {sub_sim} | {sub_pldm} | {sub_delta} | {sub_diff} |"
             )
 
