@@ -1,15 +1,11 @@
 # VCD traces - too large for git
 *.vcd
 
-# Sidecar / generated files in trace dirs (sim/ and pldm/ only)
-sim/**/*.meta
-sim/**/*.ev
-sim/**/*.html
-sim/**/*.csv
-pldm/**/*.meta
-pldm/**/*.ev
-pldm/**/*.html
-pldm/**/*.csv
+# Sidecar / generated files in trace dirs
+vcd_traces/**/*.meta
+vcd_traces/**/*.ev
+vcd_traces/**/*.html
+vcd_traces/**/*.csv
 
 # Database runtime files (regenerated each run)
 db/skipped_files.log

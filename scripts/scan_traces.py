@@ -195,7 +195,7 @@ def scan(traces_root: str | None = None, force_reparse: bool = False) -> None:
     Walk traces_root/{sim,pldm}/<date>/ directories, parse every .vcd file,
     run correlation analysis, and update db/traces.csv.
     """
-    root = Path(traces_root) if traces_root else _REPO_ROOT
+    root = Path(traces_root) if traces_root else _REPO_ROOT / "vcd_traces"
 
     logging.basicConfig(
         level=logging.INFO,
