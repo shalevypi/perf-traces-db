@@ -1,0 +1,5 @@
+# Python stdlib only - no third-party dependencies required.
+# The correlation submodule (correlation/scripts/) is used directly via sys.path.
+#
+# Optional: install for development convenience
+# pytest>=7.0

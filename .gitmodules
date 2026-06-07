@@ -1,0 +1,3 @@
+[submodule "correlation"]
+	path = correlation
+	url = git@github.com:Elmnt-Internal/ip.infra.sw.sim.correlation.git

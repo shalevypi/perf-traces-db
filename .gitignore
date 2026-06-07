@@ -1,0 +1,29 @@
+# VCD traces - too large for git
+*.vcd
+
+# Sidecar / generated files in trace dirs (sim/ and pldm/ only)
+sim/**/*.meta
+sim/**/*.ev
+sim/**/*.html
+sim/**/*.csv
+pldm/**/*.meta
+pldm/**/*.ev
+pldm/**/*.html
+pldm/**/*.csv
+
+# Database runtime files (regenerated each run)
+db/skipped_files.log
+db/report.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+.venv/
+
+# Editor
+.vscode/
+*.swp
+*~
