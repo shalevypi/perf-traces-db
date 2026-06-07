@@ -6,8 +6,13 @@ Deduplication is managed via db/scan_state.json which records the
 file mtime of every already-processed VCD.  A file is re-processed
 only if its mtime has changed or --force-reparse is requested.
 
+Correlation is run in parallel using ProcessPoolExecutor.  The number
+of worker processes defaults to the CPU count (capped at 8) and can be
+overridden with --workers N.
+
 Run via:
     python scripts/main.py scan [--traces-root <path>] [--force-reparse]
+                                [--workers N]
 """
 
 import csv
@@ -16,23 +21,23 @@ import json
 import logging
 import os
 import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
-from parse_filename import parse_vcd_filename  # noqa: E402
-from run_correlation import run_correlation     # noqa: E402
+from parse_filename import parse_vcd_filename        # noqa: E402
 from categories import lookup as cat_lookup, build_categories  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
 
-DB_DIR = _REPO_ROOT / "db"
-TRACES_CSV = DB_DIR / "traces.csv"
-SCAN_STATE = DB_DIR / "scan_state.json"
+DB_DIR      = _REPO_ROOT / "db"
+TRACES_CSV  = DB_DIR / "traces.csv"
+SCAN_STATE  = DB_DIR / "scan_state.json"
 SKIPPED_LOG = DB_DIR / "skipped_files.log"
 
 # ---------------------------------------------------------------------------
@@ -64,10 +69,29 @@ CSV_COLUMNS = [
 ]
 
 # ---------------------------------------------------------------------------
+# Parallel worker  (must be a top-level function to be picklable)
+# ---------------------------------------------------------------------------
+
+def _correlation_worker(args: tuple) -> tuple:
+    """
+    Worker executed in a child process.
+    args = (vcd_path_str, corr_scripts_str)
+    Returns (vcd_path_str, result_dict).
+    """
+    vcd_path, corr_scripts = args
+    if corr_scripts not in sys.path:
+        sys.path.insert(0, corr_scripts)
+    from run_correlation import run_correlation
+    return vcd_path, run_correlation(vcd_path)
+
+
+# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 log = logging.getLogger(__name__)
+
+_CORR_SCRIPTS = str(_REPO_ROOT / "correlation" / "scripts")
 
 
 def _row_id(meta: dict) -> str:
@@ -91,7 +115,6 @@ def _save_state(state: dict) -> None:
 
 
 def _load_csv() -> dict:
-    """Return existing CSV rows keyed by row_id."""
     rows = {}
     if not TRACES_CSV.exists():
         return rows
@@ -106,9 +129,11 @@ def _write_csv(rows: dict) -> None:
     with open(TRACES_CSV, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_COLUMNS, extrasaction="ignore")
         writer.writeheader()
-        for row in sorted(rows.values(),
-                          key=lambda r: (r["source"], r["date"], r["test_name"],
-                                         r.get("num_vcores", ""), r.get("run_type", ""))):
+        for row in sorted(
+            rows.values(),
+            key=lambda r: (r["source"], r["date"], r["test_name"],
+                           r.get("num_vcores", ""), r.get("run_type", "")),
+        ):
             writer.writerow(row)
 
 
@@ -120,35 +145,33 @@ def _file_mtime(path: str) -> float:
 
 
 def _empty_row(meta: dict, row_id: str, categories: dict) -> dict:
-    """Build a CSV row dict from parsed metadata with empty correlation fields."""
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
     return {
-        "row_id": row_id,
-        "source": meta.get("source", ""),
-        "date": meta.get("date", ""),
-        "test_name": meta.get("test_name", ""),
-        "dtype_in": meta.get("dtype_in") or "",
-        "dtype_out": meta.get("dtype_out") or "",
-        "size": meta.get("size") if meta.get("size") is not None else "",
-        "num_vcores": meta.get("num_vcores") if meta.get("num_vcores") is not None else "",
-        "num_dies": meta.get("num_dies", 1),
-        "partition": meta.get("partition") if meta.get("partition") is not None else "",
-        "run_type": meta.get("run_type", "unknown"),
-        "category": cat_lookup(meta.get("test_name", ""), categories),
-        "vcore_mhz": "",
-        "start_cycle": "",
-        "end_cycle": "",
+        "row_id":       row_id,
+        "source":       meta.get("source", ""),
+        "date":         meta.get("date", ""),
+        "test_name":    meta.get("test_name", ""),
+        "dtype_in":     meta.get("dtype_in") or "",
+        "dtype_out":    meta.get("dtype_out") or "",
+        "size":         meta.get("size") if meta.get("size") is not None else "",
+        "num_vcores":   meta.get("num_vcores") if meta.get("num_vcores") is not None else "",
+        "num_dies":     meta.get("num_dies", 1),
+        "partition":    meta.get("partition") if meta.get("partition") is not None else "",
+        "run_type":     meta.get("run_type", "unknown"),
+        "category":     cat_lookup(meta.get("test_name", ""), categories),
+        "vcore_mhz":    "",
+        "start_cycle":  "",
+        "end_cycle":    "",
         "total_cycles": "",
         "kernel_prolog_marker": "",
         "warmup_cycles": "",
         "meas_vs_warmup_ratio": "",
-        "file_path": meta.get("file_path", ""),
-        "parsed_at": now,
+        "file_path":    meta.get("file_path", ""),
+        "parsed_at":    now,
     }
 
 
 def _apply_correlation(row: dict, corr: dict) -> None:
-    """Fill correlation fields into a CSV row dict in-place."""
     if corr["error"]:
         return
     for field in ("vcore_mhz", "start_cycle", "end_cycle",
@@ -158,22 +181,15 @@ def _apply_correlation(row: dict, corr: dict) -> None:
 
 
 def _pair_warmup_measurement(rows: dict) -> None:
-    """
-    Post-scan pass: for each measurement row, find its matching warmup row
-    (same source/date/test_name/dtype_in/dtype_out/size/num_vcores/
-    num_dies/partition) and fill warmup_cycles + meas_vs_warmup_ratio.
-    """
     match_key = lambda r: (
         r["source"], r["date"], r["test_name"],
         r["dtype_in"], r["dtype_out"], r["size"],
         r["num_vcores"], r["num_dies"], r["partition"],
     )
-
-    warmup_map: dict[tuple, str] = {}  # key -> total_cycles str
+    warmup_map: dict[tuple, str] = {}
     for row in rows.values():
         if row["run_type"] == "warmup" and row["total_cycles"]:
             warmup_map[match_key(row)] = row["total_cycles"]
-
     for row in rows.values():
         if row["run_type"] == "measurement" and row["total_cycles"]:
             wc = warmup_map.get(match_key(row))
@@ -190,10 +206,14 @@ def _pair_warmup_measurement(rows: dict) -> None:
 # Scanner
 # ---------------------------------------------------------------------------
 
-def scan(traces_root: str | None = None, force_reparse: bool = False) -> None:
+def scan(
+    traces_root: str | None = None,
+    force_reparse: bool = False,
+    workers: int | None = None,
+) -> None:
     """
     Walk traces_root/{sim,pldm}/<date>/ directories, parse every .vcd file,
-    run correlation analysis, and update db/traces.csv.
+    run correlation analysis in parallel, and update db/traces.csv.
     """
     root = Path(traces_root) if traces_root else _REPO_ROOT / "vcd_traces"
 
@@ -203,17 +223,20 @@ def scan(traces_root: str | None = None, force_reparse: bool = False) -> None:
         stream=sys.stdout,
     )
 
-    # Ensure categories exist
-    categories = build_categories()
-
-    state = _load_state()
+    categories   = build_categories()
+    state        = _load_state()
     existing_rows = _load_csv()
 
-    # Open skip log
     DB_DIR.mkdir(parents=True, exist_ok=True)
     skip_log = open(SKIPPED_LOG, "w")
 
-    new_count = updated_count = skipped_count = error_count = 0
+    # ------------------------------------------------------------------
+    # Phase 1: walk folders, parse filenames, identify work to do
+    # ------------------------------------------------------------------
+    # pending: list of (vcd_path_str, meta, row_id, mtime, is_update)
+    pending   = []
+    skipped_count = 0
+    warnings  = []   # (msg,) collected for skip_log
 
     for source in ("sim", "pldm"):
         source_dir = root / source
@@ -228,72 +251,104 @@ def scan(traces_root: str | None = None, force_reparse: bool = False) -> None:
                 log.info("Skipping backup folder: %s", date_dir)
                 continue
             date_str = date_dir.name
-
             log.info("Scanning %s/%s ...", source, date_str)
 
             for vcd_file in sorted(date_dir.iterdir()):
-                # parse_vcd_filename handles non-.vcd silently
                 meta, warning = parse_vcd_filename(
                     str(vcd_file), source, date_str
                 )
-
                 if warning:
-                    log.warning(warning)
-                    skip_log.write(warning + "\n")
-
+                    warnings.append(warning)
                 if meta is None:
                     continue
 
-                row_id = _row_id(meta)
-                mtime = _file_mtime(str(vcd_file))
-
-                # Dedup check: state is keyed by file_path to avoid
-                # collisions when two files in the same folder share the
-                # same logical row_id (common in old trace folders).
-                state_key = str(vcd_file)
+                row_id     = _row_id(meta)
+                mtime      = _file_mtime(str(vcd_file))
+                state_key  = str(vcd_file)
                 state_entry = state.get(state_key, {})
+
                 already_done = (
                     not force_reparse
                     and state_entry.get("file_mtime") == mtime
                     and row_id in existing_rows
                 )
-
                 if already_done:
                     skipped_count += 1
                     continue
 
-                is_update = row_id in existing_rows
-                log.info(
-                    "  [%s] %s",
-                    "UPDATE" if is_update else "NEW",
-                    vcd_file.name,
-                )
+                pending.append((str(vcd_file), meta, row_id, mtime,
+                                row_id in existing_rows))
 
-                # Build row
-                row = _empty_row(meta, row_id, categories)
+    # Flush warnings to skip log
+    for msg in warnings:
+        log.warning(msg)
+        skip_log.write(msg + "\n")
 
-                # Run correlation
-                corr = run_correlation(str(vcd_file))
-                if corr["error"]:
-                    msg = f"CORR_ERROR: {vcd_file} -- {corr['error']}"
-                    log.warning(msg)
-                    skip_log.write(msg + "\n")
-                    error_count += 1
-                else:
-                    _apply_correlation(row, corr)
+    if not pending:
+        skip_log.close()
+        _pair_warmup_measurement(existing_rows)
+        _write_csv(existing_rows)
+        _save_state(state)
+        log.info("\nDone: 0 new, 0 updated, %d skipped (already parsed), 0 correlation errors", skipped_count)
+        log.info("CSV written to: %s", TRACES_CSV)
+        return
 
-                existing_rows[row_id] = row
-                state[state_key] = {
-                    "file_path": str(vcd_file),
-                    "file_mtime": mtime,
-                    "row_id": row_id,
-                    "parsed_at": row["parsed_at"],
-                }
+    # ------------------------------------------------------------------
+    # Phase 2: run correlation in parallel
+    # ------------------------------------------------------------------
+    n_workers = workers or min(8, os.cpu_count() or 4)
+    log.info(
+        "\nRunning correlation on %d file(s) using %d worker(s) ...",
+        len(pending), n_workers,
+    )
 
-                if is_update:
-                    updated_count += 1
-                else:
-                    new_count += 1
+    # Build args list: (vcd_path, corr_scripts_path)
+    work_args = [(vcd_path, _CORR_SCRIPTS) for vcd_path, *_ in pending]
+
+    # Map vcd_path -> correlation result
+    corr_results: dict[str, dict] = {}
+
+    with ProcessPoolExecutor(max_workers=n_workers) as executor:
+        future_to_path = {
+            executor.submit(_correlation_worker, arg): arg[0]
+            for arg in work_args
+        }
+        for future in as_completed(future_to_path):
+            vcd_path, result = future.result()
+            corr_results[vcd_path] = result
+
+    # ------------------------------------------------------------------
+    # Phase 3: assemble rows, update state
+    # ------------------------------------------------------------------
+    new_count = updated_count = error_count = 0
+
+    for vcd_path, meta, row_id, mtime, is_update in pending:
+        row  = _empty_row(meta, row_id, categories)
+        corr = corr_results.get(vcd_path, {"error": "no result", "vcore_mhz": None,
+                                            "start_cycle": None, "end_cycle": None,
+                                            "total_cycles": None, "kernel_prolog_marker": None})
+        if corr["error"]:
+            msg = f"CORR_ERROR: {vcd_path} -- {corr['error']}"
+            log.warning(msg)
+            skip_log.write(msg + "\n")
+            error_count += 1
+        else:
+            _apply_correlation(row, corr)
+            log.info("  [%s] %s", "UPDATE" if is_update else "NEW",
+                     Path(vcd_path).name)
+
+        existing_rows[row_id] = row
+        state[vcd_path] = {
+            "file_path":  vcd_path,
+            "file_mtime": mtime,
+            "row_id":     row_id,
+            "parsed_at":  row["parsed_at"],
+        }
+
+        if is_update:
+            updated_count += 1
+        else:
+            new_count += 1
 
     skip_log.close()
 
@@ -303,7 +358,6 @@ def scan(traces_root: str | None = None, force_reparse: bool = False) -> None:
     _write_csv(existing_rows)
     _save_state(state)
 
-    total = new_count + updated_count
     log.info(
         "\nDone: %d new, %d updated, %d skipped (already parsed), "
         "%d correlation errors",

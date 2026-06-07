@@ -27,7 +27,8 @@ Needs investigation before restoring or deleting.
 
 ## Scanner
 
-### Add multi-process support to scan
+### ~~Add multi-process support to scan~~ DONE
 The correlation submodule already has _parse_vcds_parallel (ProcessPoolExecutor).
-Plug it into scan_traces.py so VCDs are parsed in parallel during a full rescan.
-This will significantly reduce scan time as the number of traces grows.
+Plugged into scan_traces.py - correlation runs in parallel during a full rescan.
+Speedup: ~13s -> ~3.7s on 254 files with 8 workers.
+Control with --workers N flag.

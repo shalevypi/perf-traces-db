@@ -28,6 +28,7 @@ def cmd_scan(args):
     scan(
         traces_root=args.traces_root,
         force_reparse=args.force_reparse,
+        workers=args.workers,
     )
 
 
@@ -94,6 +95,14 @@ def main():
         metavar="PATH",
         help="Root directory containing sim/ and pldm/ folders "
              "(default: repo root)",
+    )
+    p_scan.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Number of parallel worker processes for correlation "
+             "(default: CPU count, capped at 8)",
     )
     p_scan.add_argument(
         "--force-reparse",
