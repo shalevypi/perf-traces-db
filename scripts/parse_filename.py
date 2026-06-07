@@ -2,10 +2,12 @@
 parse_filename.py - Parse VCD trace filenames into structured metadata.
 
 Supported patterns:
-  A (new sim):     vcore_r*_asm_<body>_<size>_num_vcores_<N>_partition_<P>
+  A  (new sim):    vcore_r*_asm_<body>_<size>_num_vcores_<N>_partition_<P>
                    [_warmup|_measurement].vcd
-  B (new pldm):    py_asm_<body>_<size>_num_vcores_<N>_partition_<P>.vcd
-  C (old sim):     vcore_sysc_trace_r*_test_asm_<test>[.py].vcd
+  A2 (new sim):    vcore_r*_asm_<body>_<size>[_warmup|_measurement].vcd
+                   (no num_vcores/partition in name; num_vcores=None)
+  B  (new pldm):   py_asm_<body>_<size>_num_vcores_<N>_partition_<P>.vcd
+  C  (old sim):    vcore_sysc_trace_r*_test_asm_<test>[.py].vcd
   D (old pldm v1): pldm_trace_test_asm_<test>[.py].vcd
   E (old pldm v2): asm_<test>.vcd  (e.g. asm_cast_mxfp8_bf16.vcd)
 
@@ -35,13 +37,21 @@ VALID_PREFIXES = ("py_asm_", "pldm_trace_", "asm_", "vcore_")
 # Compiled regexes
 # ---------------------------------------------------------------------------
 
-# Pattern A - new sim
+# Pattern A - new sim (with num_vcores + partition)
 # vcore_r0_t0_c0_d0_v0_asm_<body>_<size>_num_vcores_<N>_partition_<P>[_run_type]
 _RE_A = re.compile(
     r"^vcore_r\d+_t\d+_c\d+_d\d+_v\d+_"
     r"asm_(.+?)_(\d+)"
     r"_num_vcores_(\d+)"
     r"_partition_(\d+)"
+    r"(?:_(warmup|measurement))?$"
+)
+
+# Pattern A2 - new sim (without num_vcores/partition)
+# vcore_r0_t0_c0_d0_v0_asm_<body>_<size>[_warmup|_measurement]
+_RE_A2 = re.compile(
+    r"^vcore_r\d+_t\d+_c\d+_d\d+_v\d+_"
+    r"asm_(.+?)_(\d+)"
     r"(?:_(warmup|measurement))?$"
 )
 
@@ -161,7 +171,7 @@ def parse_vcd_filename(filepath, source: str, date_str: str):
 
     fp = str(filepath)
 
-    # --- Pattern A: new sim ---
+    # --- Pattern A: new sim (with num_vcores + partition) ---
     m = _RE_A.match(stem)
     if m:
         body, size_str, vcores_str, part_str, run_type = m.groups()
@@ -170,6 +180,17 @@ def parse_vcd_filename(filepath, source: str, date_str: str):
             source, date_str, body, dtype_in, dtype_out,
             int(size_str), int(vcores_str), 1,
             int(part_str), run_type or "unknown", fp
+        ), None
+
+    # --- Pattern A2: new sim (without num_vcores/partition) ---
+    m = _RE_A2.match(stem)
+    if m:
+        body, size_str, run_type = m.groups()
+        dtype_in, dtype_out = _extract_dtypes(body)
+        return _make_record(
+            source, date_str, body, dtype_in, dtype_out,
+            int(size_str), None, 1,
+            None, run_type or "unknown", fp
         ), None
 
     # --- Pattern B: new pldm ---
