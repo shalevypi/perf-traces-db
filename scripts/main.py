@@ -35,6 +35,7 @@ def cmd_report(args):
     from generate_report import generate_report
     generate_report(
         vcores_filter=args.vcores,
+        date_filter=args.date,
         to_stdout=args.stdout,
     )
 
@@ -104,6 +105,12 @@ def main():
     p_report = sub.add_parser(
         "report",
         help="Generate Markdown report from db/traces.csv",
+    )
+    p_report.add_argument(
+        "--date",
+        default=None,
+        metavar="DATE",
+        help="Filter to a specific date folder (YYYYMMDD or YYYY-MM-DD)",
     )
     p_report.add_argument(
         "--vcores",

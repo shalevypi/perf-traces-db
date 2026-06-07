@@ -44,6 +44,32 @@ _VCORE_PREF = [32, 16, 8, 4, 2, 1]
 # Helpers
 # ---------------------------------------------------------------------------
 
+def _iso_to_display(iso: str) -> str:
+    """Convert YYYY-MM-DD to DD/MM/YYYY for display."""
+    try:
+        y, m, d = iso.split("-")
+        return f"{d}/{m}/{y}"
+    except Exception:
+        return iso
+
+
+def _date_cell(sim_date: str, pldm_date: str) -> str:
+    """Format the date column value for a merged sim+pldm row."""
+    sd = _iso_to_display(sim_date) if sim_date else ""
+    pd = _iso_to_display(pldm_date) if pldm_date else ""
+    if sd == pd:
+        return sd or "-"
+    if sd and pd:
+        return f"sim:{sd} pldm:{pd}"
+    return sd or pd or "-"
+
+
+
+    if DESCRIPTIONS_FILE.exists():
+        return json.loads(DESCRIPTIONS_FILE.read_text())
+    return {}
+
+
 def _load_descriptions() -> dict:
     if DESCRIPTIONS_FILE.exists():
         return json.loads(DESCRIPTIONS_FILE.read_text())
@@ -88,10 +114,11 @@ def _delta_and_pct(sim_c, pldm_c):
 # Aggregation
 # ---------------------------------------------------------------------------
 
-def _best_per_source(rows: list, vcores_filter=None) -> dict:
+def _best_per_source(rows: list, vcores_filter=None, date_filter=None) -> dict:
     """
     For each (test_name, num_vcores, num_dies, source), return the row
-    from the most recent date.  Filters to measurement/unknown run_type.
+    from the most recent date.  Filters to measurement/unknown run_type
+    (unknown is treated as measurement).
     """
     useful = [
         r for r in rows
@@ -103,6 +130,12 @@ def _best_per_source(rows: list, vcores_filter=None) -> dict:
             r for r in useful
             if _to_int(r.get("num_vcores")) == vcores_filter
         ]
+
+    if date_filter is not None:
+        # Accept YYYY-MM-DD or YYYYMMDD
+        df = date_filter.replace("-", "")
+        df_iso = f"{df[:4]}-{df[4:6]}-{df[6:]}"
+        useful = [r for r in useful if r.get("date", "") == df_iso]
 
     best = {}
     for r in useful:
@@ -134,11 +167,15 @@ def _merge_sources(best: dict) -> dict:
                 "category": "unknown",
                 "sim_cycles": None,
                 "pldm_cycles": None,
+                "sim_date": "",
+                "pldm_date": "",
             }
         if source == "sim":
             merged[gk]["sim_cycles"] = _to_int(row.get("total_cycles"))
+            merged[gk]["sim_date"] = row.get("date", "")
         elif source == "pldm":
             merged[gk]["pldm_cycles"] = _to_int(row.get("total_cycles"))
+            merged[gk]["pldm_date"] = row.get("date", "")
         cat = row.get("category", "unknown")
         if cat and cat != "unknown":
             merged[gk]["category"] = cat
@@ -229,10 +266,10 @@ def _render_table(records: list, descriptions: dict) -> str:
     lines = []
 
     header = (
-        "| Category | Test Name | Description "
+        "| Date | Category | Test Name | Description "
         "| Sim Cycles | PLDM Cycles | Delta | Diff% |"
     )
-    separator = "|---|---|---|---:|---:|---:|---:|"
+    separator = "|---|---|---|---|---:|---:|---:|---:|"
     lines.append(header)
     lines.append(separator)
 
@@ -265,6 +302,7 @@ def _render_table(records: list, descriptions: dict) -> str:
         sim_c = primary["sim_cycles"]
         pldm_c = primary["pldm_cycles"]
         vc = primary.get("num_vcores", "")
+        date_str = _date_cell(primary.get("sim_date", ""), primary.get("pldm_date", ""))
 
         # Annotate primary cycles with vcore count when sub-rows exist
         if has_sub and vc:
@@ -277,24 +315,25 @@ def _render_table(records: list, descriptions: dict) -> str:
         delta_str, diff_str = _delta_and_pct(sim_c, pldm_c)
 
         lines.append(
-            f"| {cat_str} | {test_name} | {desc} "
+            f"| {date_str} | {cat_str} | {test_name} | {desc} "
             f"| {sim_str} | {pldm_str} | {delta_str} | {diff_str} |"
         )
 
-        # Sub-rows: empty category + test name; label in Description col
+        # Sub-rows: empty date + category + test name; label in Description col
         for sub in sub_rows:
             sub_vc = sub.get("num_vcores", "")
             label = (
                 f"Running on {sub_vc} vcores" if sub_vc
                 else "Running on all vcores"
             )
+            sub_date = _date_cell(sub.get("sim_date", ""), sub.get("pldm_date", ""))
             sub_sim = _fmt(sub["sim_cycles"])
             sub_pldm = _fmt(sub["pldm_cycles"])
             sub_delta, sub_diff = _delta_and_pct(
                 sub["sim_cycles"], sub["pldm_cycles"]
             )
             lines.append(
-                f"| | | {label} "
+                f"| {sub_date} | | | {label} "
                 f"| {sub_sim} | {sub_pldm} | {sub_delta} | {sub_diff} |"
             )
 
@@ -308,6 +347,7 @@ def _render_table(records: list, descriptions: dict) -> str:
 
 def generate_report(
     vcores_filter: int | None = None,
+    date_filter: str | None = None,
     to_stdout: bool = False,
 ) -> None:
     from datetime import date
@@ -315,7 +355,7 @@ def generate_report(
     rows = _load_csv()
     descriptions = _load_descriptions()
 
-    best = _best_per_source(rows, vcores_filter)
+    best = _best_per_source(rows, vcores_filter, date_filter)
     merged = _merge_sources(best)
     records = _group_by_test(merged)
 
@@ -334,11 +374,13 @@ def generate_report(
         "Positive = Simulator is faster."
     )
     parts.append(
-        "Measurement runs only. "
-        "Per config: latest available date is used."
+        "Measurement runs only (unknown run type treated as measurement). "
+        "Per config: latest available date is used unless --date is specified."
     )
     if vcores_filter is not None:
         parts.append(f"Filter: {vcores_filter} vcores only.")
+    if date_filter is not None:
+        parts.append(f"Filter: date = {date_filter}.")
     parts.append("")
     parts.append(_render_table(records, descriptions))
     parts.append("### Notes")
