@@ -98,14 +98,17 @@ def _fmt(val, missing="-") -> str:
 
 
 def _delta_and_pct(sim_c, pldm_c):
-    """Return (delta_str, diff_str) or ("-", "-") if either value is missing."""
+    """Return (delta_str, diff_str) or ("-", "-") if either value is missing.
+
+    Diff% = (PLDM - Sim) / Sim * 100  -- relative to sim as the baseline.
+    """
     if sim_c is None or pldm_c is None:
         return "-", "-"
     delta = pldm_c - sim_c
     delta_str = f"+{delta}" if delta > 0 else str(delta)
-    if pldm_c == 0:
+    if sim_c == 0:
         return delta_str, "-"
-    pct = delta / pldm_c * 100
+    pct = delta / sim_c * 100
     sign = "+" if pct >= 0 else ""
     return delta_str, f"{sign}{pct:.1f}%"
 
