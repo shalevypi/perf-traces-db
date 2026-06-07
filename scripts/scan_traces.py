@@ -224,6 +224,9 @@ def scan(traces_root: str | None = None, force_reparse: bool = False) -> None:
         for date_dir in sorted(source_dir.iterdir()):
             if not date_dir.is_dir():
                 continue
+            if date_dir.name.endswith(".bak"):
+                log.info("Skipping backup folder: %s", date_dir)
+                continue
             date_str = date_dir.name
 
             log.info("Scanning %s/%s ...", source, date_str)
