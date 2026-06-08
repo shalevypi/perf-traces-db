@@ -1522,5 +1522,365 @@
     "file_mtime": 1779558921.4557154,
     "row_id": "64da4c900603b5c0",
     "parsed_at": "2026-06-07T14:37:32+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_add_bf16_bf16_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_add_bf16_bf16_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896788.794462,
+    "row_id": "39499566a742c336",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_add_bf16_bf16_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_add_bf16_bf16_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896790.1424618,
+    "row_id": "7c20458ba16c5817",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_down_bf16_bf16_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_down_bf16_bf16_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896791.3544614,
+    "row_id": "5c0265dfd2520123",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_down_bf16_bf16_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_down_bf16_bf16_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896792.5824614,
+    "row_id": "dbb7ba8e8bc07a21",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_mxfp8_bf16_bf16_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_mxfp8_bf16_bf16_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896793.930461,
+    "row_id": "c8a2ca3537bfc2d2",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_mxfp8_bf16_bf16_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_mxfp8_bf16_bf16_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896795.3064609,
+    "row_id": "b7c9483f2af259e8",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_up_fp32_fp32_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_up_fp32_fp32_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896796.5104604,
+    "row_id": "4a944d37ea977dea",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_up_fp32_fp32_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_cast_up_fp32_fp32_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896797.73446,
+    "row_id": "02d7624dbc6363b8",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_clamp_fp32_fp32_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_clamp_fp32_fp32_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896798.96646,
+    "row_id": "48f5a3d728830838",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_clamp_fp32_fp32_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_clamp_fp32_fp32_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896800.3064597,
+    "row_id": "9cfb54c10489fd47",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_1024_num_vcores_16_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_1024_num_vcores_16_partition_1.vcd",
+    "file_mtime": 1780896801.6504593,
+    "row_id": "91a8303cac2463e4",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896802.8664591,
+    "row_id": "0844d8899b3ba6c6",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896804.2064588,
+    "row_id": "365fdd5b0d5669bb",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_1024_num_vcores_8_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_1024_num_vcores_8_partition_1.vcd",
+    "file_mtime": 1780896805.5544584,
+    "row_id": "40202e8db1852f48",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_64_num_vcores_16_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_64_num_vcores_16_partition_1.vcd",
+    "file_mtime": 1780896806.7544582,
+    "row_id": "54e182294039f0dd",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_64_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_64_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896807.958458,
+    "row_id": "e9fdec7675116b76",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_64_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_64_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896809.1584578,
+    "row_id": "5e9c98e5d9271f09",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_64_num_vcores_8_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_exp_fp32_fp32_64_num_vcores_8_partition_1.vcd",
+    "file_mtime": 1780896810.3584573,
+    "row_id": "36be555fdb9bf592",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_memcpy_fp32_local_fp32_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_memcpy_fp32_local_fp32_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896811.5504572,
+    "row_id": "7e67cd033ba3a25d",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_memcpy_fp32_local_fp32_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_memcpy_fp32_local_fp32_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896812.8024569,
+    "row_id": "179374f1b9256f06",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_mul_bf16_bf16_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_mul_bf16_bf16_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896814.0504568,
+    "row_id": "3296b5c71b77aaf2",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_mul_bf16_bf16_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_mul_bf16_bf16_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896815.3824563,
+    "row_id": "44bf31b48e7a414f",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_rmsnorm_bf16_bf16_8_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_rmsnorm_bf16_bf16_8_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896816.978456,
+    "row_id": "fa53bec1d3cdc2e8",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_rmsnorm_bf16_bf16_8_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_rmsnorm_bf16_bf16_8_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896818.7144558,
+    "row_id": "fb3546bfdca1d0aa",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_rsqrt_fp32_fp32_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_rsqrt_fp32_fp32_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896820.0664556,
+    "row_id": "7a21a8ffdf25706e",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_rsqrt_fp32_fp32_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_rsqrt_fp32_fp32_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896821.4544551,
+    "row_id": "357438fb317b15fc",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_silu_bf16_bf16_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_silu_bf16_bf16_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896822.822455,
+    "row_id": "19b93a598f7f91dd",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_silu_bf16_bf16_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_silu_bf16_bf16_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896824.1824546,
+    "row_id": "e4957274e32fcbd4",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_softmax_fp32_fp32_32_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_softmax_fp32_fp32_32_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896825.8464544,
+    "row_id": "71aa6dd832091265",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_softmax_fp32_fp32_32_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_softmax_fp32_fp32_32_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896827.542454,
+    "row_id": "4c52c8b3003f1348",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_sub_bf16_bf16_1024_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_sub_bf16_bf16_1024_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896828.7784538,
+    "row_id": "197079cae7222fe7",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_sub_bf16_bf16_1024_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_sub_bf16_bf16_1024_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896830.0384536,
+    "row_id": "2a63834e3aa77c88",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_transpose_bf16_bf16_32_num_vcores_1_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_transpose_bf16_bf16_32_num_vcores_1_partition_1.vcd",
+    "file_mtime": 1780896831.1144533,
+    "row_id": "a117dc1cb9ae5ce0",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_transpose_bf16_bf16_32_num_vcores_32_partition_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_transpose_bf16_bf16_32_num_vcores_32_partition_1.vcd",
+    "file_mtime": 1780896832.1824532,
+    "row_id": "658eee674f017046",
+    "parsed_at": "2026-06-08T05:39:14+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_16tile_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_16tile_bf16_1.vcd",
+    "file_mtime": 1780896833.5784528,
+    "row_id": "fc281a8eb33b320f",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_1tile_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_1tile_bf16_1.vcd",
+    "file_mtime": 1780896834.9264526,
+    "row_id": "db7751d6e86e6e03",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_1tile_cd8192_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_1tile_cd8192_bf16_1.vcd",
+    "file_mtime": 1780896836.2824523,
+    "row_id": "c41b18b4c9152b94",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_32tile_2vxm_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_32tile_2vxm_bf16_1.vcd",
+    "file_mtime": 1780896837.758452,
+    "row_id": "ecbb6327646906ec",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_32tile_2vxm_chained_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_32tile_2vxm_chained_bf16_1.vcd",
+    "file_mtime": 1780896839.2664516,
+    "row_id": "a96b249c94c1a285",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_32tile_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_32tile_bf16_1.vcd",
+    "file_mtime": 1780896840.6144514,
+    "row_id": "e34ebd92d11412ed",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_32tile_chained_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_32tile_chained_bf16_1.vcd",
+    "file_mtime": 1780896842.082451,
+    "row_id": "afc1b72949c1d9f9",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_32tile_polled_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_32tile_polled_bf16_1.vcd",
+    "file_mtime": 1780896843.4384508,
+    "row_id": "439d1c39e6ccb291",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4act_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4act_bf16_1.vcd",
+    "file_mtime": 1780896844.7744508,
+    "row_id": "c89de79b446817b4",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_2vxm_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_2vxm_bf16_1.vcd",
+    "file_mtime": 1780896846.1144505,
+    "row_id": "97b3c66eca207a7d",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_bf16_1.vcd",
+    "file_mtime": 1780896847.4464502,
+    "row_id": "f4247b0659172cca",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_cd2048_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_cd2048_bf16_1.vcd",
+    "file_mtime": 1780896848.7944498,
+    "row_id": "80c0a8c39002362f",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_cd512_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_cd512_bf16_1.vcd",
+    "file_mtime": 1780896850.1464496,
+    "row_id": "bf16e9b699e6346b",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_cd8192_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_cd8192_bf16_1.vcd",
+    "file_mtime": 1780896851.5104494,
+    "row_id": "d14c1bac5729006b",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_fp8_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_fp8_bf16_1.vcd",
+    "file_mtime": 1780896852.8424492,
+    "row_id": "cd83d230c270fa14",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_fp8_fp8_e4m3_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_fp8_fp8_e4m3_1.vcd",
+    "file_mtime": 1780896854.174449,
+    "row_id": "b062caeda615666d",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_large_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_large_bf16_1.vcd",
+    "file_mtime": 1780896855.5104487,
+    "row_id": "8e910f84d3693100",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_xpose_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_4tile_xpose_bf16_1.vcd",
+    "file_mtime": 1780896856.8664484,
+    "row_id": "ebc542a48d558b02",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_7tile_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_7tile_bf16_1.vcd",
+    "file_mtime": 1780896858.222448,
+    "row_id": "173a00404b195081",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_7tile_polled_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_7tile_polled_bf16_1.vcd",
+    "file_mtime": 1780896859.590448,
+    "row_id": "c8cc090f4c198230",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_8tile_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_8tile_bf16_1.vcd",
+    "file_mtime": 1780896860.9704475,
+    "row_id": "b51c02243de67ee6",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_8tile_chained_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_8tile_chained_bf16_1.vcd",
+    "file_mtime": 1780896862.3664474,
+    "row_id": "5ec64f45fb0287b3",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_8tile_polled_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_8tile_polled_bf16_1.vcd",
+    "file_mtime": 1780896863.730447,
+    "row_id": "652bef6cc0c46e4d",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_back2back_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_back2back_bf16_1.vcd",
+    "file_mtime": 1780896865.0984468,
+    "row_id": "9efda170e03223dc",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_mixed_dtype_seq_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_mixed_dtype_seq_bf16_1.vcd",
+    "file_mtime": 1780896866.4704466,
+    "row_id": "b013c426493bc897",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
+  },
+  "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_odd_ncd_bf16_1.vcd": {
+    "file_path": "/home/shay.levy/traces/vcd_traces/pldm/20260608/py_asm_vme_odd_ncd_bf16_1.vcd",
+    "file_mtime": 1780896867.8664465,
+    "row_id": "3bf08b732abbeb7d",
+    "parsed_at": "2026-06-08T05:40:24+00:00"
   }
 }

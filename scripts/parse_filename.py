@@ -7,6 +7,8 @@ Supported patterns:
   A2 (new sim):    vcore_r*_asm_<body>_<size>[_warmup|_measurement].vcd
                    (no num_vcores/partition in name; num_vcores=None)
   B  (new pldm):   py_asm_<body>_<size>_num_vcores_<N>_partition_<P>.vcd
+  B2 (new pldm):   py_asm_<body>_<size>.vcd
+                   (no num_vcores/partition in name; num_vcores=None)
   C  (old sim):    vcore_sysc_trace_r*_test_asm_<test>[.py].vcd
   D (old pldm v1): pldm_trace_test_asm_<test>[.py].vcd
   E (old pldm v2): asm_<test>.vcd  (e.g. asm_cast_mxfp8_bf16.vcd)
@@ -55,12 +57,18 @@ _RE_A2 = re.compile(
     r"(?:_(warmup|measurement))?$"
 )
 
-# Pattern B - new pldm
+# Pattern B - new pldm (with num_vcores + partition)
 # py_asm_<body>_<size>_num_vcores_<N>_partition_<P>
 _RE_B = re.compile(
     r"^py_asm_(.+?)_(\d+)"
     r"_num_vcores_(\d+)"
     r"_partition_(\d+)$"
+)
+
+# Pattern B2 - new pldm (without num_vcores/partition)
+# py_asm_<body>_<size>
+_RE_B2 = re.compile(
+    r"^py_asm_(.+?)_(\d+)$"
 )
 
 # Pattern C - old sim
@@ -193,7 +201,7 @@ def parse_vcd_filename(filepath, source: str, date_str: str):
             None, run_type or "unknown", fp
         ), None
 
-    # --- Pattern B: new pldm ---
+    # --- Pattern B: new pldm (with num_vcores + partition) ---
     m = _RE_B.match(stem)
     if m:
         body, size_str, vcores_str, part_str = m.groups()
@@ -202,6 +210,17 @@ def parse_vcd_filename(filepath, source: str, date_str: str):
             source, date_str, body, dtype_in, dtype_out,
             int(size_str), int(vcores_str), 1,
             int(part_str), "unknown", fp
+        ), None
+
+    # --- Pattern B2: new pldm (without num_vcores/partition) ---
+    m = _RE_B2.match(stem)
+    if m:
+        body, size_str = m.groups()
+        dtype_in, dtype_out = _extract_dtypes(body)
+        return _make_record(
+            source, date_str, body, dtype_in, dtype_out,
+            int(size_str), None, 1,
+            None, "unknown", fp
         ), None
 
     # --- Pattern C: old sim ---
