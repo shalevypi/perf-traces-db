@@ -37,6 +37,8 @@ def cmd_report(args):
     generate_report(
         vcores_filter=args.vcores,
         date_filter=args.date,
+        category_filter=args.category,
+        by_category=args.by_category,
         to_stdout=args.stdout,
     )
 
@@ -120,6 +122,18 @@ def main():
         default=None,
         metavar="DATE",
         help="Filter to a specific date folder (YYYYMMDD or YYYY-MM-DD)",
+    )
+    p_report.add_argument(
+        "--category",
+        default=None,
+        metavar="NAME",
+        help="Filter report to a single category "
+             "(e.g. elementwise, cast, memory, vme, normalization)",
+    )
+    p_report.add_argument(
+        "--by-category",
+        action="store_true",
+        help="Split report into one table per category",
     )
     p_report.add_argument(
         "--vcores",

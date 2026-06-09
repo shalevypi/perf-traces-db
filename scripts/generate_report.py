@@ -353,6 +353,8 @@ def _render_table(records: list, descriptions: dict) -> str:
 def generate_report(
     vcores_filter: int | None = None,
     date_filter: str | None = None,
+    category_filter: str | None = None,
+    by_category: bool = False,
     to_stdout: bool = False,
 ) -> None:
     from datetime import date
@@ -367,6 +369,15 @@ def generate_report(
     if not records:
         print("WARNING: No records to report (check filters).", file=sys.stderr)
         return
+
+    # Apply category filter
+    if category_filter:
+        records = [r for r in records
+                   if r.get("category", "").lower() == category_filter.lower()]
+        if not records:
+            print(f"WARNING: No records for category '{category_filter}'.",
+                  file=sys.stderr)
+            return
 
     parts = []
     parts.append("# Performance: Simulator vs PLDM")
@@ -386,8 +397,34 @@ def generate_report(
         parts.append(f"Filter: {vcores_filter} vcores only.")
     if date_filter is not None:
         parts.append(f"Filter: date = {date_filter}.")
+    if category_filter:
+        parts.append(f"Filter: category = {category_filter}.")
     parts.append("")
-    parts.append(_render_table(records, descriptions))
+
+    if by_category:
+        # One table per category, sorted by cat_order
+        cat_order = [
+            "elementwise", "cast", "memory", "normalization",
+            "vme", "cce", "legacy", "deadlock", "unknown",
+        ]
+        from collections import defaultdict
+        by_cat: dict[str, list] = defaultdict(list)
+        for rec in records:
+            by_cat[rec.get("category", "unknown")].append(rec)
+
+        def _cat_sort(c):
+            try:
+                return cat_order.index(c)
+            except ValueError:
+                return len(cat_order)
+
+        for cat in sorted(by_cat.keys(), key=_cat_sort):
+            parts.append(f"## {_category_display(cat)}")
+            parts.append("")
+            parts.append(_render_table(by_cat[cat], descriptions))
+    else:
+        parts.append(_render_table(records, descriptions))
+
     parts.append("### Notes")
     parts.append("")
     parts.append(
