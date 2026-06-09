@@ -52,12 +52,19 @@ def build_categories(force: bool = False) -> dict:
     categories: dict[str, str] = {}
 
     # --- Method 1: walk kernel_tests subdirectories ---
+    # Also add the folder name itself as a prefix-level fallback key so that
+    # any test whose name starts with that folder (e.g. vme_8act, vme_16act)
+    # is correctly categorised even before it appears in the star file.
     kernel_tests_dir = _CORR_ROOT / "kernel_tests"
     if kernel_tests_dir.exists():
         for folder in kernel_tests_dir.iterdir():
             if not folder.is_dir():
                 continue
-            cat = _FOLDER_TO_CATEGORY.get(folder.name, folder.name)
+            cat = _FOLDER_TO_CATEGORY.get(folder.name)
+            if cat is None:
+                continue  # skip non-category dirs (cmake, scripts, etc.)
+            # Prefix fallback: folder name alone maps to its category
+            categories[folder.name] = cat
             for py_file in folder.glob("test_asm_*.py"):
                 test_name = re.sub(r"^test_asm_", "", py_file.stem)
                 categories[test_name] = cat
