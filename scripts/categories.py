@@ -21,6 +21,7 @@ _FOLDER_TO_CATEGORY = {
     "elementwise":   "elementwise",
     "normalization": "normalization",
     "cast":          "cast",
+    "convert":       "convert",
     "memory":        "memory",
     "vme":           "vme",
     "legacy":        "legacy",
@@ -29,11 +30,8 @@ _FOLDER_TO_CATEGORY = {
 }
 
 # Extra prefix keys not derivable from kernel_tests/ folder names.
-# These catch tests whose naming convention differs from folder names,
-# or whose folder does not yet exist in the submodule.
 _EXTRA_PREFIXES = {
-    "cce":  "cce",   # cce_* tests (no cce/ folder in submodule yet)
-    "cvt":  "cast",  # cvt_* convert tests map to cast category
+    "cvt": "convert",  # cvt_* trace names map to convert category
 }
 
 

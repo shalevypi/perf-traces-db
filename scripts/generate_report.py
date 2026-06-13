@@ -256,6 +256,7 @@ def _category_display(cat: str) -> str:
         "elementwise":   "Elementwise Arithmetic",
         "normalization": "Normalization",
         "cast":          "Type Conversion",
+        "convert":       "Convert",
         "memory":        "Memory",
         "vme":           "VME",
         "legacy":        "Control Flow",
@@ -277,7 +278,7 @@ def _render_table(records: list, descriptions: dict) -> str:
     lines.append(separator)
 
     cat_order = [
-        "elementwise", "cast", "memory", "normalization",
+        "elementwise", "cast", "convert", "memory", "normalization",
         "vme", "cce", "legacy", "deadlock", "unknown",
     ]
 
