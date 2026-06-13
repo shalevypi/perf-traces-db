@@ -18,14 +18,22 @@ _CATEGORIES_FILE = _REPO_ROOT / "db" / "categories.json"
 
 # Folder name inside kernel_tests -> canonical category name
 _FOLDER_TO_CATEGORY = {
-    "elementwise":  "elementwise",
+    "elementwise":   "elementwise",
     "normalization": "normalization",
-    "cast":         "cast",
-    "memory":       "memory",
-    "vme":          "vme",
-    "legacy":       "legacy",
-    "deadlock":     "deadlock",
-    "cce":          "cce",
+    "cast":          "cast",
+    "memory":        "memory",
+    "vme":           "vme",
+    "legacy":        "legacy",
+    "deadlock":      "deadlock",
+    "cce":           "cce",
+}
+
+# Extra prefix keys not derivable from kernel_tests/ folder names.
+# These catch tests whose naming convention differs from folder names,
+# or whose folder does not yet exist in the submodule.
+_EXTRA_PREFIXES = {
+    "cce":  "cce",   # cce_* tests (no cce/ folder in submodule yet)
+    "cvt":  "cast",  # cvt_* convert tests map to cast category
 }
 
 
@@ -80,6 +88,11 @@ def build_categories(force: bool = False) -> dict:
             cat = _FOLDER_TO_CATEGORY.get(folder, folder)
             if raw_name not in categories:
                 categories[raw_name] = cat
+
+    # --- Method 3: extra prefix keys not in kernel_tests/ ---
+    for prefix, cat in _EXTRA_PREFIXES.items():
+        if prefix not in categories:
+            categories[prefix] = cat
 
     _CATEGORIES_FILE.parent.mkdir(parents=True, exist_ok=True)
     _CATEGORIES_FILE.write_text(
